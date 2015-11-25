@@ -57,3 +57,12 @@ Examples:
 
 --> first parameter is name of action id,
     second parameter is id of button ("*" = all controls)
+
+
+
+To save some boilerplate when dealing with controls and listitems, this module will also set some attributes for the Window class you use it for:
+
+self.control: actual focused control
+self.listitem: actual focused listitem (in case a list is focused)
+
+ These attributes get updated everytime one of the events takes place and can be used within the decorated methods.
