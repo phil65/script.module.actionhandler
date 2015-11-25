@@ -1,6 +1,6 @@
 script.module.actionhandler
 
-Module containing a decorator factory which allows assigning click/focus/action events to methods in your WindowXML instance via decorators.
+Module containing a decorator factory which allows assigning click/focus/action events to methods in your WindowXML class via decorators.
 
 
 Usage:
