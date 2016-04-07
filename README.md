@@ -59,6 +59,12 @@ Examples:
     second parameter is id of button ("*" = all controls)
 
 
+- for contextmenu action event:
+
+    @ch.context("movie")
+    def some_method(self):
+
+--> first parameter is mediatype of the focused item
 
 To save some boilerplate when dealing with controls and listitems, this module will also set some attributes for the Window class you use it for:
 
