@@ -206,6 +206,7 @@ class ActionHandler():
         self.focus_actions = {}
         self.action_maps = {}
         self.context_actions = {}
+        self.clicks_by_type = {}
 
     def click(self, button_ids):
         def decorator(f):
@@ -214,6 +215,17 @@ class ActionHandler():
                     self.clicks[button_id] = f
             else:
                 self.clicks[button_ids] = f
+            return f
+
+        return decorator
+
+    def click_by_type(self, mediatypes):
+        def decorator(f):
+            if isinstance(mediatypes, list):
+                for mediatype in mediatypes:
+                    self.clicks_by_type[mediatype] = f
+            else:
+                self.clicks_by_type[mediatypes] = f
             return f
 
         return decorator
@@ -255,6 +267,13 @@ class ActionHandler():
         return decorator
 
     def serve(self, control_id, wnd):
+        listitem = self.get_listitem(wnd, control_id)
+        if listitem:
+            media_type = listitem.getVideoInfoTag().getMediaType()
+            if media_type:
+                action = self.clicks_by_type.get(media_type)
+                if action:
+                    action(wnd, control_id)
         view_function = self.clicks.get(control_id)
         if view_function:
             return view_function(wnd, control_id)
@@ -268,11 +287,13 @@ class ActionHandler():
         action_id = action.getId()
         wnd.action_id = action_id
         if action_id == xbmcgui.ACTION_CONTEXT_MENU:
-            media_type = self.get_listitem(wnd, control_id).getVideoInfoTag().getMediaType()
-            if media_type:
-                ctx_action = self.context_actions.get(media_type)
-                if ctx_action:
-                    ctx_action(wnd, control_id)
+            listitem = self.get_listitem(wnd, control_id)
+            if listitem:
+                media_type = listitem.getVideoInfoTag().getMediaType()
+                if media_type:
+                    ctx_action = self.context_actions.get(media_type)
+                    if ctx_action:
+                        ctx_action(wnd, control_id)
         if action_id not in self.action_maps:
             return None
         dct = self.action_maps[action_id]
