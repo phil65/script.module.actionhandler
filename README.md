@@ -30,29 +30,29 @@ Examples:
 
     @ch.click(1000)
     @ch.click(2000)
-    def some_method(self):
+    def some_method(self, control_id):
         ...
 
     @ch.click([1000,2000])
-    def some_method(self):
+    def some_method(self, control_id):
         ...
 
 
 - for focus events:
 
     @ch.focus(1000)
-    def some_method(self):
+    def some_method(self, control_id):
         ...
 
 
 - for action events:
 
     @ch.action("number9", "*")
-    def some_method(self):
+    def some_method(self, control_id):
         ...
 
     @ch.action("contextmenu", 150)
-    def some_method(self):
+    def some_method(self, control_id):
         ...
 
 --> first parameter is name of action id,
@@ -62,6 +62,6 @@ Examples:
 - for contextmenu action event:
 
     @ch.context("movie")
-    def some_method(self):
+    def some_method(self, control_id):
 
 --> first parameter is mediatype of the focused item
