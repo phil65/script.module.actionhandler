@@ -286,7 +286,6 @@ class ActionHandler():
             return ctl_func(wnd, control_id)
 
     def attach_control_attribs(self, wnd, control_id):
-        wnd.control_id = control_id
         try:
             wnd.control = wnd.getControl(control_id)
         except:

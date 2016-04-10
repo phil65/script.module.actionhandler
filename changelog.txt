@@ -1,3 +1,6 @@
+1.1.1
+- pass control id to decorated methods
+
 1.1.0
 
 - add context() decorator
