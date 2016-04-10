@@ -256,25 +256,23 @@ class ActionHandler():
 
     def serve(self, control_id, wnd):
         view_function = self.clicks.get(control_id)
-        self.attach_control_attribs(wnd, control_id)
         if view_function:
             return view_function(wnd, control_id)
 
     def serve_focus(self, control_id, wnd):
         view_function = self.focus_actions.get(control_id)
-        self.attach_control_attribs(wnd, control_id)
         if view_function:
             return view_function(wnd, control_id)
 
     def serve_action(self, action, control_id, wnd):
         action_id = action.getId()
         wnd.action_id = action_id
-        self.attach_control_attribs(wnd, control_id)
         if action_id == xbmcgui.ACTION_CONTEXT_MENU:
-            media_type = wnd.listitem.getVideoInfoTag().getMediaType()
-            ctx_action = self.context_actions.get(media_type)
-            if ctx_action:
-                ctx_action(wnd, control_id)
+            media_type = self.get_listitem(wnd, control_id).getVideoInfoTag().getMediaType()
+            if media_type:
+                ctx_action = self.context_actions.get(media_type)
+                if ctx_action:
+                    ctx_action(wnd, control_id)
         if action_id not in self.action_maps:
             return None
         dct = self.action_maps[action_id]
@@ -285,14 +283,11 @@ class ActionHandler():
         if ctl_func:
             return ctl_func(wnd, control_id)
 
-    def attach_control_attribs(self, wnd, control_id):
+    def get_listitem(self, wnd, control_id):
         try:
-            wnd.control = wnd.getControl(control_id)
-        except:
-            wnd.control = None
-        try:
-            wnd.listitem = wnd.control.getSelectedItem()
-            if not wnd.listitem:
-                wnd.listitem = wnd.getListItem(wnd.getCurrentListPosition())
-        except:
-            wnd.listitem = None
+            listitem = wnd.getControl(control_id).getSelectedItem()
+            if not listitem:
+                listitem = wnd.getListItem(wnd.getCurrentListPosition())
+            return listitem
+        except Exception:
+            return None
