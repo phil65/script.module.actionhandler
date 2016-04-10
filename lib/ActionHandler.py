@@ -258,13 +258,13 @@ class ActionHandler():
         view_function = self.clicks.get(control_id)
         self.attach_control_attribs(wnd, control_id)
         if view_function:
-            return view_function(wnd)
+            return view_function(wnd, control_id)
 
     def serve_focus(self, control_id, wnd):
         view_function = self.focus_actions.get(control_id)
         self.attach_control_attribs(wnd, control_id)
         if view_function:
-            return view_function(wnd)
+            return view_function(wnd, control_id)
 
     def serve_action(self, action, control_id, wnd):
         action_id = action.getId()
@@ -274,16 +274,16 @@ class ActionHandler():
             media_type = wnd.listitem.getVideoInfoTag().getMediaType()
             ctx_action = self.context_actions.get(media_type)
             if ctx_action:
-                ctx_action(wnd)
+                ctx_action(wnd, control_id)
         if action_id not in self.action_maps:
             return None
         dct = self.action_maps[action_id]
         all_func = dct.get("*")
         if all_func:
-            all_func(wnd)
+            all_func(wnd, control_id)
         ctl_func = dct.get(control_id)
         if ctl_func:
-            return ctl_func(wnd)
+            return ctl_func(wnd, control_id)
 
     def attach_control_attribs(self, wnd, control_id):
         wnd.control_id = control_id
