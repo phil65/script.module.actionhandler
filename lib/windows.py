@@ -6,14 +6,10 @@
 import xbmcgui
 
 
-class WindowXML(xbmcgui.WindowXML):
+class WindowMixin(object):
 
     def __init__(self, *args, **kwargs):
-        xbmcgui.WindowXML.__init__(self)
-        self.window_type = "window"
-
-    def onInit(self):
-        self.window_id = xbmcgui.getCurrentWindowId()
+        super(WindowMixin, self).__init__()
 
     def FocusedItem(self, control_id):
         try:
@@ -25,21 +21,38 @@ class WindowXML(xbmcgui.WindowXML):
         except Exception:
             return None
 
+    def set_visible(self, control_id, condition):
+        try:
+            self.getControl(control_id).setVisible(bool(condition))
+            return True
+        except Exception:
+            return False
 
-class DialogXML(xbmcgui.WindowXMLDialog):
+    def check_visible(self, control_id):
+        try:
+            self.getControl(control_id)
+            return True
+        except Exception:
+            return False
+
+
+class WindowXML(xbmcgui.WindowXML, WindowMixin):
 
     def __init__(self, *args, **kwargs):
-        xbmcgui.WindowXMLDialog.__init__(self)
+        super(WindowXML, self).__init__()
+        self.window_type = "window"
+
+    def onInit(self):
+        self.window_id = xbmcgui.getCurrentWindowId()
+
+
+class DialogXML(xbmcgui.WindowXMLDialog, WindowMixin):
+
+    def __init__(self, *args, **kwargs):
+        super(DialogXML, self).__init__()
         self.window_type = "dialog"
 
     def onInit(self):
         self.window_id = xbmcgui.getCurrentWindowDialogId()
 
-    def FocusedItem(self, control_id):
-        try:
-            listitem = self.getControl(control_id).getSelectedItem()
-            if not listitem:
-                listitem = self.getListItem(self.getCurrentListPosition())
-            return listitem
-        except Exception:
-            return None
+
